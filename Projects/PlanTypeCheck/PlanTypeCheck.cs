@@ -41,7 +41,7 @@ namespace PlanTypeCheck
         {
             // TODO: Add your code here.
             //foreach(PatientSummary psumm in app.PatientSummaries.Where(x=>x.CreationDateTime >= )))
-            Patient p = app.OpenPatientById("US-EC-055");
+            Patient p = app.OpenPatientById("US-EC-005");
             foreach (Course c in p.Courses)
             {
                 Console.WriteLine($"Running plans from {c.Id}");
@@ -117,7 +117,7 @@ namespace PlanTypeCheck
                                     }
                                     else
                                     {
-                                        field_type += "Arc Field";
+                                        field_type += "Non-VMAT Arc Field";
                                     }
 
                                 }
@@ -126,7 +126,7 @@ namespace PlanTypeCheck
                         }
                         Console.ReadLine();
                     }
-                    else { Console.WriteLine($"Beam contains no dose"); }
+                    else { Console.WriteLine($"Plan: {ps.Id} contains no dose"); }
                 }
             }
         }
