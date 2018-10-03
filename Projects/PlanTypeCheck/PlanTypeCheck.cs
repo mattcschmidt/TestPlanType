@@ -93,8 +93,8 @@ namespace PlanTypeCheck
 
                                     foreach (String line in b.CalculationLogs.First(x => x.Category == "Dose").MessageLines)
                                     {
-                                        if (line.Contains("This is a VMAT field")) { _VMAT = true; }
-                                        if (line.Contains("IMRT field normalization")) { _IMRT = true; _FiF = true; _Irreg = true; }
+                                        if (line.Contains("This is a VMAT field")) { _VMAT = true; break; }
+                                        if (line.Contains("IMRT field normalization")) { _IMRT = true; _FiF = true; _Irreg = true; break; }
 
                                     }
                                     if (_Irreg)
@@ -117,8 +117,19 @@ namespace PlanTypeCheck
                                         //    _IMRT = false;
                                         //}
                                         //Try using the number of control points to differentiate IMRT and FiF
-                                        if (b.ControlPoints.Count() < 15) { _IMRT = false; }
-                                        else { _FiF = false; }
+                                        //if (b.ControlPoints.Count() < 15) { _IMRT = false; }
+                                        //else { _FiF = false; }
+                                        //decided not to use the logic above becausethe number of control points is not a robust way to tell the
+                                        //difference between IMRT and FiF. Instead, if the plan is IMRT, it will have gone through the optimizer.
+                                        //The existence of Optimization calculation notes will determine whether it is IMRT>
+                                        if(b.CalculationLogs.Where(x=>x.Category == "Optimization").Count() == 0)
+                                        {
+                                            _IMRT = false;//optimization logs do not exist the plan was not optimized
+                                        }
+                                        else
+                                        {
+                                            _FiF = false;//FiF do not have optimization logs, only dose.
+                                        }
                                     }
                                     string field_type = "";
                                     if (_VMAT) { field_type += "VMAT"; }
